@@ -60,7 +60,7 @@ func Check(e error) {
 		entry := LogEntry{message: e.Error(), err: true}
 		errorLog = append(errorLog, entry)
 		fmt.Println(e)
-		if writeToFile {
+		if logFile {
 			writeFile(e.Error())
 		}
 	}
@@ -71,7 +71,9 @@ func Log(msg string) {
 	entry := LogEntry{msg, false}
 	errorLog = append(errorLog, entry)
 	fmt.Println(msg)
-	writeFile(msg)
+	if logFile {
+		writeFile(msg)
+	}
 }
 
 //GetErrorLog : Getter method for error log slice in HTML format
