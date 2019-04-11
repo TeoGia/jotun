@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/teogia/jotun/Logger"
@@ -19,12 +20,13 @@ var (
 )
 
 func start() {
+	res := exeCmd("pwd") //todo change
+	fmt.Println(res)
 
 }
 
 //checkHumanFormat validates user input of -h flag.
 func checkHumanFormat(format string) {
-	fmt.Println("Format", format) //todo remove test
 	if format == "GB" || format == "MB" || format == "kB" || format == "B" {
 		humanFormat = format
 	} else {
@@ -36,11 +38,26 @@ func checkHumanFormat(format string) {
 //validatePid Checks if there's an existing process running with the provided pid.
 func validatePid(pidInput string) {
 	//todo
-	fmt.Println("pid:", pidInput) //todo remove
+	res := exeCmd("ps auwx | grep java")
+	if strings.Contains(res, pidInput) == false {
+		fmt.Println("No java process found with pid:", pidInput, "Exiting..")
+		os.Exit(1)
+	}
 }
 
 func parsePidList(pidListInput string) {
 	//todo parse pid list, check if pids exist one by one, else exit 1
+}
+
+//exeCmd Executes a bash command
+func exeCmd(cmd string) string {
+	out, err := exec.Command("bash", "-c", cmd).Output()
+	if err != nil {
+		fmt.Println("error occured")
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	return string(out)
 }
 
 //printOptions print options & help instead of failre or upon request
