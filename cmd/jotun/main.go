@@ -26,7 +26,7 @@ var (
 )
 
 func monitor() {
-	Logger.Log("Starting monitoring packets on selected device..\n==================START======================\n")
+	fmt.Println("Starting monitoring packets on selected device..\n==================START======================\n")
 	// Open device
 	handle, err = pcap.OpenLive(device, snapshotLen, promiscuous, timeout)
 	Logger.Check(err)
@@ -36,7 +36,7 @@ func monitor() {
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	for packet := range packetSource.Packets() {
 		// Process packet here
-		Logger.Log(packet.String())
+		fmt.Println(packet.String())
 		getPacketPayload(packet)
 	}
 }
@@ -47,20 +47,20 @@ func start(config conf.Config) {
 	Logger.Check(err)
 
 	// Print device information
-	Logger.Log("Devices found:")
+	fmt.Println("Devices found:")
 	for _, device := range devices {
-		Logger.Log("\nName: " + device.Name)
-		Logger.Log("Description: " + device.Description)
-		Logger.Log("Devices addresses: " + device.Description)
+		fmt.Println("\nName: " + device.Name)
+		fmt.Println("Description: " + device.Description)
+		fmt.Println("Devices addresses: " + device.Description)
 		for _, address := range device.Addresses {
-			Logger.Log("- IP address: " + address.IP.String())
-			Logger.Log("- Subnet mask: " + address.Netmask.String())
+			fmt.Println("- IP address: " + address.IP.String())
+			fmt.Println("- Subnet mask: " + address.Netmask.String())
 		}
 	}
-	Logger.Log("\nType the name of the device you wish to monitor..")
+	fmt.Println("\nType the name of the device you wish to monitor..")
 	fmt.Scan(&device)
 	print("\033[H\033[2J") //clears terminal screen
-	Logger.Log("Selected device: " + device)
+	fmt.Println("Selected device: " + device)
 	monitor()
 }
 
@@ -81,33 +81,33 @@ func getPacketPayload(packet gopacket.Packet) {
 //printOptions print options & help instead of failre or upon request
 func printOptions(help bool) {
 	if !help {
-		Logger.Log("no arguements found. exiting...\n")
-	}
-	Logger.Log("You can use the following arguements:\n")
-	Logger.Log("start - to start tooly (needs to be run with sudo)")
-	Logger.Log("--conf - to specify the path to the desirable config file")
-	Logger.Log("-h or --help to display this help ouput")
+		fmt.Println("no arguements found. exiting...\n")
+	} //TODO update the args usage
+	fmt.Println("You can use the following arguements:\n")
+	fmt.Println("start - to start tooly (needs to be run with sudo)")
+	fmt.Println("--conf - to specify the path to the desirable config file")
+	fmt.Println("-h or --help to display this help ouput")
 	os.Exit(0)
 }
 
-func main() {
-	var confile string
+func main() { // TODO install sweagle task runner for testimg purposes or create my own app.
 	var config conf.Config
 	Logger.Init()
 	if len(os.Args) == 1 {
 		printOptions(false)
 	} else {
-		for i, arg := range os.Args {
-			if arg == "--conf" {
-				Logger.Log("found arguement for config file")
-				confile = os.Args[i+1]
-				config = conf.GetConfig(confile)
-			} else if arg == "start" {
-				Logger.Log("no arguements found. starting with default config...")
-				config = conf.GetConfig(".config")
+		for _, arg := range os.Args {
+			// if arg == "--conf" { //TODO update the accepted args
+			// fmt.Println("found arguement for config file")
+			// confile = os.Args[i+1]
+			// config = conf.GetConfig(confile) //TODO find a way to load it at the beginning without --conf. Al this has to be removed
+			// } else if arg == "start" { //TODO start should initiate the interactive live mode
+			// fmt.Println("no arguements found. starting with default config...")
+			// config = conf.GetConfig(".config")
 
-			} else if arg == "-h" || arg == "--help" {
-				Logger.Log("Displaying help")
+			// } else if arg == "-h" || arg == "--help" {
+			if arg == "-h" || arg == "--help" {
+				fmt.Println("Displaying help")
 				printOptions(true)
 			}
 		}

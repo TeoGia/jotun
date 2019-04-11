@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	file *os.File
-	path = "logs/tooly-" + time.Now().Format(time.RFC850) + ".log"
+	file    *os.File
+	logFile = false
+	path    = "logs/tooly-" + time.Now().Format(time.RFC850) + ".log"
 )
 
 // LogEntry - err :true for error, false otherwise
@@ -21,8 +22,15 @@ var errorLog []LogEntry
 
 //Init create log file
 func Init() {
-	_, err := os.Create(path)
-	Check(err)
+	if logFile {
+		_, err := os.Create(path)
+		Check(err)
+	}
+}
+
+// GetLogFileStatus returns if a local log file is to be kept.
+func GetLogFileStatus() bool {
+	return logFile
 }
 
 func writeFile(entry string) {
@@ -52,7 +60,9 @@ func Check(e error) {
 		entry := LogEntry{message: e.Error(), err: true}
 		errorLog = append(errorLog, entry)
 		fmt.Println(e)
-		writeFile(e.Error())
+		if writeToFile {
+			writeFile(e.Error())
+		}
 	}
 }
 
