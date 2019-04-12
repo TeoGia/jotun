@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+type pidListOut struct {
+	PidLlist []pidOut
+}
+
 type pidOut struct {
 	Pid          string
 	Heap         string
