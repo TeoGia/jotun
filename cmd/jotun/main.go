@@ -16,7 +16,7 @@ type testStruct struct {
 var (
 	pid         string
 	pidList     []string
-	humanFormat string
+	humanFormat = "kB"
 	singlePid   bool
 )
 
