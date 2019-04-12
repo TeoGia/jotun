@@ -37,6 +37,20 @@ func start() {
 		}
 		printOptions(false)
 	}
+	if singlePid {
+		fmt.Println(getSinglePidHeap())
+	}
+}
+
+//getSinglePidHeap Gets pid's heap usage via jstat
+func getSinglePidHeap() string {
+	res := exeCmd("jstat -gc " + pid + " | awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
+	if strings.Contains(res, "not found") == true {
+		fmt.Println("No java process found with pid:", pid, "Exiting..")
+		fmt.Println(res)
+		os.Exit(1)
+	}
+	return "Single pid heap: " + res[:len(res)-1] + " " + humanFormat //todo return json not string
 }
 
 //checkHumanFormat validates user input of -h flag.
@@ -99,7 +113,7 @@ func printOptions(help bool) {
 	fmt.Println()
 	fmt.Println("	-p 		Get Heap usage for specific JAVA pid")
 	fmt.Println("	--pid-list	Get Heap usage for a list of JAVApids. Provide them like 123,54487,7895. The output will be in JSON format")
-	fmt.Println("	--all	Get Heap Usage for all running JAVA processes")
+	fmt.Println("	--all		Get Heap Usage for all running JAVA processes")
 	fmt.Println("	-h 		for human readable format in GB, MB, kB, B")
 	fmt.Println("	--help 		to display this help ouput")
 	if !help {
