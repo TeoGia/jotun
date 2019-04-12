@@ -47,6 +47,25 @@ func start() {
 	}
 }
 
+//getFreeRAM returns the system's total RAM in the selected format
+func getFreeRAM() string {
+	res := exeCmd("cat /proc/meminfo | awk 'FNR==2{print $2}'")
+	if strings.Contains(res, "not found") == true {
+		fmt.Println("No java process found with pid:", pid, "Exiting..")
+		fmt.Println(res)
+		os.Exit(1)
+	}
+	totaLRAM, _ := strconv.ParseFloat(res[:len(res)-1], 64)
+	if humanFormat == "MB" {
+		totaLRAM = totaLRAM / 1024
+	} else if humanFormat == "GB" {
+		totaLRAM = totaLRAM / 1024 / 1024
+	} else if humanFormat == "B" {
+		totaLRAM = totaLRAM * 1024
+	}
+	return fmt.Sprintf("%.2f", totaLRAM)
+}
+
 //getTotalRAM returns the system's total RAM in the selected format
 func getTotalRAM() string {
 	res := exeCmd("cat /proc/meminfo | awk 'FNR==1{print $2}'")
@@ -64,7 +83,6 @@ func getTotalRAM() string {
 		totaLRAM = totaLRAM * 1024
 	}
 	return fmt.Sprintf("%.2f", totaLRAM)
-
 }
 
 //getSinglePidHeap Gets pid's heap usage via jstat
@@ -88,7 +106,7 @@ func getSinglePidHeap() []byte {
 		Heap:         fmt.Sprintf("%.2f", heap),
 		Format:       humanFormat,
 		AvailableRAM: getTotalRAM(),
-		FreeRAM:      "N/A",
+		FreeRAM:      getFreeRAM(),
 	}
 	jsonRes, err := json.Marshal(output)
 	if err != nil {
