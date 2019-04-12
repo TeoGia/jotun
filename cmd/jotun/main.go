@@ -1,15 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 )
 
-type testStruct struct {
-	Test string
+type pidOut struct {
+	Pid          string
+	Heap         string
+	Format       string
+	AvailableRAM string
+	FreeRAM      string
 }
 
 var (
@@ -30,19 +36,19 @@ func start() {
 		printOptions(false)
 	} else if pid != "" && (pidList != nil || allPids) {
 		if allPids {
-			fmt.Print("You cant have --all flag when checking for a single pid or pid list.")
+			fmt.Println("You cant have --all flag when checking for a single pid or pid list.")
 		} else {
 			fmt.Println("You cant have both single pid and pid list.")
 		}
 		printOptions(false)
 	}
 	if singlePid {
-		fmt.Println(getSinglePidHeap())
+		fmt.Println(string(getSinglePidHeap()))
 	}
 }
 
 //getSinglePidHeap Gets pid's heap usage via jstat
-func getSinglePidHeap() string {
+func getSinglePidHeap() []byte {
 	res := exeCmd("jstat -gc " + pid + " | awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
 	if strings.Contains(res, "not found") == true {
 		fmt.Println("No java process found with pid:", pid, "Exiting..")
@@ -57,8 +63,19 @@ func getSinglePidHeap() string {
 	} else if humanFormat == "B" {
 		heap = heap * 1024
 	}
-	output := fmt.Sprintf("%.2f", heap)
-	return "Single pid heap: " + output + " " + humanFormat //todo return json not string
+	output := pidOut{
+		Pid:          pid,
+		Heap:         fmt.Sprintf("%.2f", heap),
+		Format:       humanFormat,
+		AvailableRAM: "N/A",
+		FreeRAM:      "N/A",
+	}
+	jsonRes, err := json.Marshal(output)
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+	return jsonRes
 }
 
 //checkHumanFormat validates user input of -h flag.
