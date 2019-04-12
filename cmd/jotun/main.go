@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
-
-	"github.com/teogia/jotun/Logger"
 )
 
 type testStruct struct {
@@ -50,7 +49,16 @@ func getSinglePidHeap() string {
 		fmt.Println(res)
 		os.Exit(1)
 	}
-	return "Single pid heap: " + res[:len(res)-1] + " " + humanFormat //todo return json not string
+	heap, _ := strconv.ParseFloat(res[:len(res)-1], 64)
+	if humanFormat == "MB" {
+		heap = heap / 1024
+	} else if humanFormat == "GB" {
+		heap = heap / 1024 / 1024
+	} else if humanFormat == "B" {
+		heap = heap * 1024
+	}
+	output := fmt.Sprintf("%.2f", heap)
+	return "Single pid heap: " + output + " " + humanFormat //todo return json not string
 }
 
 //checkHumanFormat validates user input of -h flag.
@@ -124,7 +132,6 @@ func printOptions(help bool) {
 }
 
 func main() {
-	Logger.Init()
 	if len(os.Args) == 1 {
 		printOptions(false)
 	} else {
