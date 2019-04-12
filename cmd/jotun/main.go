@@ -18,18 +18,23 @@ var (
 	pidList     []string
 	humanFormat = "kB"
 	singlePid   bool
+	allPids     = false
 )
 
 func start() {
-	if pid != "" && pidList == nil {
+	if pid != "" && pidList == nil && allPids == false {
 		singlePid = true
-	} else if pid == "" && pidList != nil {
+	} else if pid == "" && (pidList != nil || allPids) {
 		singlePid = false
-	} else if pid == "" && pidList == nil {
-		fmt.Println("Neither a pid is specified nor a pid list.")
+	} else if pid == "" && pidList == nil && !allPids {
+		fmt.Println("Neither a pid is specified nor a pid list or --all flag.")
 		printOptions(false)
-	} else if pid != "" && pidList != nil {
-		fmt.Println("You cant have both single pid and pid list.")
+	} else if pid != "" && (pidList != nil || allPids) {
+		if allPids {
+			fmt.Print("You cant have --all flag when checking for a single pid or pid list.")
+		} else {
+			fmt.Println("You cant have both single pid and pid list.")
+		}
 		printOptions(false)
 	}
 }
@@ -44,7 +49,7 @@ func checkHumanFormat(format string) {
 	}
 }
 
-//validatePid Checks if there's an existing process running with the provided pid.
+//validatePid Checks if there's an existing JAVA process running with the provided pid.
 func validatePid(pidInput string) {
 	res := exeCmd("ps auwx | grep java")
 	if strings.Contains(res, pidInput) == false {
@@ -55,6 +60,19 @@ func validatePid(pidInput string) {
 	}
 }
 
+//validateAll Checks if any JAVA process is running, if not it terminates the execution
+func validateAll() {
+	res := exeCmd("ps auwx | grep java | sed '$d'")
+	if strings.Contains(res, "java") == false {
+		fmt.Println("No java process found .Exiting..")
+		os.Exit(1)
+	} else {
+		allPids = true
+	}
+
+}
+
+// parsePidList Parses pid list input and checks is pids exist.
 func parsePidList(pidListInput string) {
 	//todo parse pid list, check if pids exist one by one, else exit 1
 	pidList = append(pidList, pidListInput)
@@ -79,8 +97,9 @@ func printOptions(help bool) {
 	}
 	fmt.Println("You can use the following arguements:")
 	fmt.Println()
-	fmt.Println("	-p 		Get Heap usage for specific pid")
-	fmt.Println("	--pid-list	Get Heap usage for a list of pids. Provide them like 123,54487,7895. The output will be in JSON format")
+	fmt.Println("	-p 		Get Heap usage for specific JAVA pid")
+	fmt.Println("	--pid-list	Get Heap usage for a list of JAVApids. Provide them like 123,54487,7895. The output will be in JSON format")
+	fmt.Println("	--all	Get Heap Usage for all running JAVA processes")
 	fmt.Println("	-h 		for human readable format in GB, MB, kB, B")
 	fmt.Println("	--help 		to display this help ouput")
 	if !help {
@@ -106,6 +125,8 @@ func main() {
 					printOptions(true)
 				} else if arg == "-h" {
 					checkHumanFormat(os.Args[i+2])
+				} else if arg == "--all" {
+					validateAll()
 				} else {
 					printOptions(false)
 				}
