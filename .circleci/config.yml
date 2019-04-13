@@ -18,6 +18,7 @@ jobs: # basic units of work in a run
     steps: # steps that comprise the `build` job
       - checkout # check out source code to working directory
       - run: mkdir -p $TEST_RESULTS # create the test results directory
+      - run: mkdir -p /tmp/artifacts
 
       - restore_cache: # restores saved cache if no changes are detected since last run
       # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
@@ -32,16 +33,16 @@ jobs: # basic units of work in a run
 
       #  CircleCi's Go Docker image includes netcat
       #  This allows polling the DB port to confirm it is open before proceeding
-      - run:
-          name: Waiting for Postgres to be ready
-          command: |
-            for i in `seq 1 10`;
-            do
-              nc -z localhost 5432 && echo Success && exit 0
-              echo -n .
-              sleep 1
-            done
-            echo Failed waiting for Postgres && exit 1
+      # - run:
+      #     name: Waiting for Postgres to be ready
+      #     command: |
+      #       for i in `seq 1 10`;
+      #       do
+      #         nc -z localhost 5432 && echo Success && exit 0
+      #         echo -n .
+      #         sleep 1
+      #       done
+      #       echo Failed waiting for Postgres && exit 1
 
       # - run:
       #     name: Run unit tests
@@ -53,12 +54,18 @@ jobs: # basic units of work in a run
       #       trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
       #       make test | tee ${TEST_RESULTS}/go-test.out
 
-      - run: make # pull and build dependencies for the project
+      - run:
+          name: Build step 
+          command: make build # pull and build dependencies for the project
 
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
           paths:
             - "/go/pkg"
+
+      - store_artifacts:
+          path: ./bin/jotun
+          destination: jotun
 
       # - run:
       #     name: Start service
@@ -74,9 +81,9 @@ jobs: # basic units of work in a run
       #       sleep 5
       #       curl --retry 10 --retry-delay 1 -X POST --header "Content-Type: application/json" -d '{"email":"test@example.com","name":"Test User"}' http://localhost:8080/contacts
 
-      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: /tmp/test-results
-          destination: raw-test-output
+      # - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      #     path: /tmp/test-results
+      #     destination: raw-test-output
 
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: /tmp/test-results
+      # - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+      #     path: /tmp/test-results
