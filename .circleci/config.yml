@@ -38,6 +38,6 @@ jobs: # basic units of work in a run
           name: "Publish Release on GitHub"
           command: |
             go get github.com/tcnksm/ghr
-            # VERSION=$(my-binary --version)
-            VERSION=1.0.0
+            # VERSION=$(jotun --version)
+            VERSION=v1.0.0
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
