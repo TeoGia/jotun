@@ -120,14 +120,24 @@ func getSinglePidHeap() []byte {
 	return jsonRes
 }
 
+//isValueInList checks if a string is contained in a string list
+func isValueInList(value string, list []string) bool {
+	for _, v := range list {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}
+
 //checkHumanFormat validates user input of -h flag.
 func checkHumanFormat(format string) {
-	if format == "GB" || format == "MB" || format == "kB" || format == "B" {
-		humanFormat = format
-	} else {
+	var acceptableFormats = []string{"GB", "MB", "kB", "B"}
+	if !isValueInList(format, acceptableFormats) {
 		fmt.Println("Human format prameter is not one of the accepted values GB, MB, kB, B. Exiting..")
 		os.Exit(1)
 	}
+	humanFormat = format
 }
 
 //validatePid Checks if there's an existing JAVA process running with the provided pid.
@@ -136,9 +146,8 @@ func validatePid(pidInput string) {
 	if strings.Contains(res, pidInput) == false {
 		fmt.Println("No java process found with pid:", pidInput, "Exiting..")
 		os.Exit(1)
-	} else {
-		pid = pidInput
 	}
+	pid = pidInput
 }
 
 //validateAll Checks if any JAVA process is running, if not it terminates the execution
@@ -147,9 +156,8 @@ func validateAll() {
 	if strings.Contains(res, "java") == false {
 		fmt.Println("No java process found .Exiting..")
 		os.Exit(1)
-	} else {
-		allPids = true
 	}
+	allPids = true
 
 }
 
@@ -185,15 +193,12 @@ func printOptions(help bool) {
 	fmt.Println("	--help 		to display this help ouput")
 	if !help {
 		os.Exit(1)
-	} else {
-		os.Exit(0)
 	}
+	os.Exit(0)
 }
 
 func main() {
-	if len(os.Args) == 1 {
-		printOptions(false)
-	} else {
+	if len(os.Args) >= 1 {
 		for i, arg := range os.Args[1:] {
 			if strings.HasPrefix(arg, "-") {
 				if arg == "-p" {
@@ -215,4 +220,6 @@ func main() {
 
 		start()
 	}
+	printOptions(false)
+
 }
