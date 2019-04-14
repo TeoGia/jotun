@@ -1,7 +1,9 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -25,4 +27,14 @@ func ExeCmd(cmd string) string {
 		os.Exit(1)
 	}
 	return string(out)
+}
+
+//PrintJSON coverts struct object into json and returns the output
+func PrintJSON(t interface{}) []byte {
+	jsonRes, err := json.Marshal(t)
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+	return jsonRes
 }

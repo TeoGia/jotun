@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -59,7 +57,9 @@ func Start() {
 		PrintOptions(false)
 	}
 	if singlePid {
-		fmt.Println(string(getSinglePidHeap()))
+		fmt.Println(string(helper.PrintJSON(getSinglePidHeap(pid))))
+	} else {
+		fmt.Println(string(helper.PrintJSON(getPidListHeap())))
 	}
 }
 
@@ -101,8 +101,21 @@ func getTotalRAM() string {
 	return fmt.Sprintf("%.2f", totaLRAM)
 }
 
+//getPidListHeap Getas pid list's heap usage via jstat
+func getPidListHeap() pidListOut {
+	res := []pidOut{}
+	for _, pid := range pidList {
+		res = append(res, getSinglePidHeap(pid))
+	}
+
+	output := pidListOut{
+		PidLlist: res,
+	}
+	return output
+}
+
 //getSinglePidHeap Gets pid's heap usage via jstat
-func getSinglePidHeap() []byte {
+func getSinglePidHeap(pid string) pidOut {
 	res := helper.ExeCmd("jstat -gc " + pid + " | awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
 	if strings.Contains(res, "not found") == true {
 		fmt.Println("No java process found with pid:", pid, "Exiting..")
@@ -124,12 +137,8 @@ func getSinglePidHeap() []byte {
 		AvailableRAM: getTotalRAM(),
 		FreeRAM:      getFreeRAM(),
 	}
-	jsonRes, err := json.Marshal(output)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	return jsonRes
+
+	return output
 }
 
 //CheckHumanFormat validates user input of -h flag.
@@ -143,13 +152,13 @@ func CheckHumanFormat(format string) {
 }
 
 //ValidatePid Checks if there's an existing JAVA process running with the provided pid.
-func ValidatePid(pidInput string) {
+func ValidatePid(pidInput string) bool {
 	res := helper.ExeCmd("ps auwx | grep java")
 	if strings.Contains(res, pidInput) == false {
 		fmt.Println("No java process found with pid:", pidInput, "Exiting..")
 		os.Exit(1)
 	}
-	pid = pidInput
+	return true
 }
 
 //ValidateAll Checks if any JAVA process is running, if not it terminates the execution
@@ -165,8 +174,10 @@ func ValidateAll() {
 
 //ParsePidList Parses pid list input and checks is pids exist.
 func ParsePidList(pidListInput string) {
-	//todo parse pid list, check if pids exist one by one, else exit 1
-	pidList = append(pidList, pidListInput)
+	pidList = strings.Split(pidListInput, ",")
+	for _, pid := range pidList {
+		ValidatePid(pid)
+	}
 }
 
 //PrintOptions print options & help instead of failre or upon request

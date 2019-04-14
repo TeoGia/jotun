@@ -14,7 +14,9 @@ func main() {
 	for i, arg := range os.Args[1:] {
 		if strings.HasPrefix(arg, "-") {
 			if arg == "-p" && len(os.Args) > 2 {
-				ValidatePid(os.Args[i+2])
+				if ValidatePid(os.Args[i+2]) {
+					pid = os.Args[i+2]
+				}
 			} else if arg == "--pid-list" && len(os.Args) > 2 {
 				ParsePidList(os.Args[i+2])
 			} else if arg == "--help" {
