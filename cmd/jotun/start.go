@@ -15,6 +15,7 @@ type pidListOut struct {
 
 type pidOut struct {
 	Pid          string
+	PidName      string
 	Heap         string
 	Format       string
 	AvailableRAM string
@@ -117,6 +118,7 @@ func getPidListHeap() pidListOut {
 //getSinglePidHeap Gets pid's heap usage via jstat
 func getSinglePidHeap(pid string) pidOut {
 	res := helper.ExeCmd("jstat -gc " + pid + " | awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
+	pidName := helper.ExeCmd("ps awux | grep " + pid + " | awk 'FNR==1{print $13}'")
 	if strings.Contains(res, "not found") == true {
 		fmt.Println("No java process found with pid:", pid, "Exiting..")
 		fmt.Println(res)
@@ -132,6 +134,7 @@ func getSinglePidHeap(pid string) pidOut {
 	}
 	output := pidOut{
 		Pid:          pid,
+		PidName:      pidName[:len(pidName)-1],
 		Heap:         fmt.Sprintf("%.2f", heap),
 		Format:       humanFormat,
 		AvailableRAM: getTotalRAM(),
