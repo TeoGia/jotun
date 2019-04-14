@@ -37,6 +37,6 @@ jobs: # basic units of work in a run
           command: |
             go get github.com/tcnksm/ghr
             GITHUB_TOKEN=ac590a7b9659dfd9858f6a89e3786a6c350e0edc
-            VERSION=$(jotun -v)
+            VERSION=$(./bin/jotun -v)
             echo -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION}
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./bin/jotun
