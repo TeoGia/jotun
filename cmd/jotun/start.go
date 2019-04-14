@@ -73,7 +73,17 @@ func Start() {
 
 //gatheJavaProcess gathers all running java processes into pid list
 func gatherJavaProcess() {
-
+	res := helper.ExeCmd("ps auwx | egrep java")
+	if !strings.Contains(res, "java") {
+		fmt.Println("No JAVA processes found running. Exiting..")
+		os.Exit(1)
+	}
+	raw := strings.Split(res, "\n")
+	for _, row := range raw[:len(raw)-1] {
+		if !strings.Contains(row, "grep") {
+			pidList = append(pidList, strings.Fields(row)[1])
+		}
+	}
 }
 
 //getFreeRAM returns the system's total RAM in the selected format
@@ -204,7 +214,7 @@ func PrintOptions(help bool) {
 	fmt.Println("You can use the following arguements:")
 	fmt.Println()
 	fmt.Println("	-p 		Get Heap usage for specific JAVA pid")
-	fmt.Println("	--pid-list	Get Heap usage for a list of JAVApids. Provide them like 123,54487,7895. The output will be in JSON format")
+	fmt.Println("	--pid-list	Get Heap usage for a list of JAVA pids. Provide them like 123,54487,7895. The output will be in JSON format")
 	fmt.Println("	--all		Get Heap Usage for all running JAVA processes")
 	fmt.Println("	-h 		for human readable format in GB, MB, kB, B")
 	fmt.Println("	--help 		to display this help ouput")
