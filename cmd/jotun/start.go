@@ -42,14 +42,21 @@ func GetVersion() string {
 
 //Start starts jotun after validations are over
 func Start() {
-	if pid != "" && pidList == nil && allPids == false {
+	if pid != "" && pidList == nil && !allPids {
 		singlePid = true
 	} else if pid == "" && (pidList != nil || allPids) {
 		singlePid = false
+		if pidList != nil && allPids {
+			fmt.Println("You cant have --all flag when checking for a single pid or pid list.")
+			PrintOptions(false)
+		}
+		if allPids {
+			gatherJavaProcess()
+		}
 	} else if pid == "" && pidList == nil && !allPids {
 		fmt.Println("Neither a pid is specified nor a pid list or --all flag.")
 		PrintOptions(false)
-	} else if pid != "" && (pidList != nil || allPids) {
+	} else if ((pid != "" || pidList != nil) && allPids) || pid != "" && pidList != nil {
 		if allPids {
 			fmt.Println("You cant have --all flag when checking for a single pid or pid list.")
 		} else {
@@ -62,6 +69,11 @@ func Start() {
 	} else {
 		fmt.Println(string(helper.PrintJSON(getPidListHeap())))
 	}
+}
+
+//gatheJavaProcess gathers all running java processes into pid list
+func gatherJavaProcess() {
+
 }
 
 //getFreeRAM returns the system's total RAM in the selected format
