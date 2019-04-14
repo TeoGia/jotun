@@ -23,10 +23,11 @@ jobs: # basic units of work in a run
           keys:
             - v1-pkg-cache
       - run:
+          name: Install custom packages
+          command: go get github.com/teogia/jotun/helper
+      - run:
           name: Build step 
-          command: |
-          go get github.com/teogia/jotun/helper
-          make build # pull and build dependencies for the project
+          command: make build
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
           paths:
