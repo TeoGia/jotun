@@ -22,6 +22,11 @@ type pidOut struct {
 	FreeRAM      string
 }
 
+const (
+	//VERSION the application's current version
+	VERSION = "1.0.0-alpha"
+)
+
 var (
 	pid         string
 	pidList     []string
@@ -29,6 +34,10 @@ var (
 	singlePid   bool
 	allPids     = false
 )
+
+func getVersion() string {
+	return VERSION
+}
 
 func start() {
 	if pid != "" && pidList == nil && allPids == false {
@@ -191,6 +200,7 @@ func printOptions(help bool) {
 	fmt.Println("	--all		Get Heap Usage for all running JAVA processes")
 	fmt.Println("	-h 		for human readable format in GB, MB, kB, B")
 	fmt.Println("	--help 		to display this help ouput")
+	fmt.Println("	-v		Get jotun's varsion")
 	if !help {
 		os.Exit(1)
 	}
@@ -204,17 +214,20 @@ func main() {
 	}
 	for i, arg := range os.Args[1:] {
 		if strings.HasPrefix(arg, "-") {
-			if arg == "-p" {
+			if arg == "-p" && len(os.Args) > 2 {
 				validatePid(os.Args[i+2])
-			} else if arg == "--pid-list" {
+			} else if arg == "--pid-list" && len(os.Args) > 2 {
 				parsePidList(os.Args[i+2])
 			} else if arg == "--help" {
 				fmt.Println("Displaying help")
 				printOptions(true)
-			} else if arg == "-h" {
+			} else if arg == "-h" && len(os.Args) > 2 {
 				checkHumanFormat(os.Args[i+2])
 			} else if arg == "--all" {
 				validateAll()
+			} else if arg == "-v" {
+				fmt.Println(getVersion())
+				os.Exit(0)
 			} else {
 				printOptions(false)
 			}
