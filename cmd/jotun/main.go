@@ -198,28 +198,29 @@ func printOptions(help bool) {
 }
 
 func main() {
-	if len(os.Args) >= 1 {
-		for i, arg := range os.Args[1:] {
-			if strings.HasPrefix(arg, "-") {
-				if arg == "-p" {
-					validatePid(os.Args[i+2])
-				} else if arg == "--pid-list" {
-					parsePidList(os.Args[i+2])
-				} else if arg == "--help" {
-					fmt.Println("Displaying help")
-					printOptions(true)
-				} else if arg == "-h" {
-					checkHumanFormat(os.Args[i+2])
-				} else if arg == "--all" {
-					validateAll()
-				} else {
-					printOptions(false)
-				}
+	if len(os.Args) == 1 {
+		printOptions(false)
+
+	}
+	for i, arg := range os.Args[1:] {
+		if strings.HasPrefix(arg, "-") {
+			if arg == "-p" {
+				validatePid(os.Args[i+2])
+			} else if arg == "--pid-list" {
+				parsePidList(os.Args[i+2])
+			} else if arg == "--help" {
+				fmt.Println("Displaying help")
+				printOptions(true)
+			} else if arg == "-h" {
+				checkHumanFormat(os.Args[i+2])
+			} else if arg == "--all" {
+				validateAll()
+			} else {
+				printOptions(false)
 			}
 		}
-
-		start()
 	}
-	printOptions(false)
+
+	start()
 
 }
