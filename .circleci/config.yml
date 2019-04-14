@@ -24,7 +24,9 @@ jobs: # basic units of work in a run
             - v1-pkg-cache
       - run:
           name: Build step 
-          command: make build # pull and build dependencies for the project
+          command: |
+          go get github.com/teogia/jotun/helper
+          make build # pull and build dependencies for the project
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
           paths:
