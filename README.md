@@ -55,7 +55,11 @@ Example:
 `{"PidLlist":[{"Pid":"456","PidName":"java3.jar","Heap":"27846.90","Format":"kB","AvailableRAM":"16316300.00","FreeRAM":"12106400.00"},{"Pid":"123","PidName":"java2.jar","Heap":"27846.90","Format":"kB","AvailableRAM":"16316300.00","FreeRAM":"12106400.00"},{"Pid":"789","PidName":"java3.jar","Heap":"27846.90","Format":"kB","AvailableRAM":"16316300.00","FreeRAM":"12106400.00"}]}`
 
 
+## Conclusion
 
+Jotun is a free program under the MIT license and will remain that way forever. Please feel free to report any issues or development request through github's ticketing system. Feel free to Fork and enjoy yourself as well.
+
+Hope you'll find it useful
 CirceCI latest build status: [![CircleCI](https://circleci.com/gh/TeoGia/jotun.svg?style=svg&circle-token=5ad98b6e111e7e48d491de0b56d5b3348f1e86b3)](https://circleci.com/gh/TeoGia/jotun)
 
 [Buy me a cup of coffee](https://paypal.me/teogia)
