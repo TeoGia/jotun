@@ -88,40 +88,30 @@ func gatherJavaProcess() {
 
 //getFreeRAM returns the system's total RAM in the selected format
 func getFreeRAM() string {
-	res := helper.ExeCmd("cat /proc/meminfo | awk 'FNR==2{print $2}'")
-	if strings.Contains(res, "not found") == true {
-		fmt.Println("No java process found with pid:", pid, "Exiting..")
-		fmt.Println(res)
-		os.Exit(1)
-	}
-	totaLRAM, _ := strconv.ParseFloat(res[:len(res)-1], 64)
+	res := helper.ExeCmd("cat /proc/meminfo")
+	freeRAM, _ := strconv.ParseFloat(strings.Fields(strings.Split(res, "\n")[1])[1], 64)
 	if humanFormat == "MB" {
-		totaLRAM = totaLRAM / 1024
+		freeRAM = freeRAM / 1024
 	} else if humanFormat == "GB" {
-		totaLRAM = totaLRAM / 1024 / 1024
+		freeRAM = freeRAM / 1024 / 1024
 	} else if humanFormat == "B" {
-		totaLRAM = totaLRAM * 1024
+		freeRAM = freeRAM * 1024
 	}
-	return fmt.Sprintf("%.2f", totaLRAM)
+	return fmt.Sprintf("%.2f", freeRAM)
 }
 
 //getTotalRAM returns the system's total RAM in the selected format
 func getTotalRAM() string {
-	res := helper.ExeCmd("cat /proc/meminfo | awk 'FNR==1{print $2}'")
-	if strings.Contains(res, "not found") == true {
-		fmt.Println("No java process found with pid:", pid, "Exiting..")
-		fmt.Println(res)
-		os.Exit(1)
-	}
-	totaLRAM, _ := strconv.ParseFloat(res[:len(res)-1], 64)
+	res := helper.ExeCmd("cat /proc/meminfo")
+	totalRAM, _ := strconv.ParseFloat(strings.Fields(strings.Split(res, "\n")[0])[1], 64)
 	if humanFormat == "MB" {
-		totaLRAM = totaLRAM / 1024
+		totalRAM = totalRAM / 1024
 	} else if humanFormat == "GB" {
-		totaLRAM = totaLRAM / 1024 / 1024
+		totalRAM = totalRAM / 1024 / 1024
 	} else if humanFormat == "B" {
-		totaLRAM = totaLRAM * 1024
+		totalRAM = totalRAM * 1024
 	}
-	return fmt.Sprintf("%.2f", totaLRAM)
+	return fmt.Sprintf("%.2f", totalRAM)
 }
 
 //getPidListHeap Getas pid list's heap usage via jstat
@@ -139,14 +129,22 @@ func getPidListHeap() pidListOut {
 
 //getSinglePidHeap Gets pid's heap usage via jstat
 func getSinglePidHeap(pid string) pidOut {
-	res := helper.ExeCmd("jstat -gc " + pid + " | awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
-	pidName := helper.ExeCmd("ps awux | grep " + pid + " | awk 'FNR==1{print $13}'")
+	res := helper.ExeCmd("jstat -gc " + pid) //| awk 'FNR==2{print $0}' | awk '{heap=$3+$4+$6+$8+$10+$12; print heap}'")
+	resFields := strings.Fields(strings.Split(res, "\n")[1])
+	heap := 0.0
+	for i, mem := range resFields {
+		if i == 2 || i == 3 || i == 5 || i == 7 || i == 9 || i == 11 {
+			mem, _ := strconv.ParseFloat(mem, 64)
+			heap += mem
+		}
+	}
+	pidRaw := helper.ExeCmd("ps awux | grep " + pid)
+	pidName := strings.Fields(strings.Split(pidRaw, "\n")[0])[12]
 	if strings.Contains(res, "not found") == true {
 		fmt.Println("No java process found with pid:", pid, "Exiting..")
 		fmt.Println(res)
 		os.Exit(1)
 	}
-	heap, _ := strconv.ParseFloat(res[:len(res)-1], 64)
 	if humanFormat == "MB" {
 		heap = heap / 1024
 	} else if humanFormat == "GB" {
@@ -156,7 +154,7 @@ func getSinglePidHeap(pid string) pidOut {
 	}
 	output := pidOut{
 		Pid:          pid,
-		PidName:      pidName[:len(pidName)-1],
+		PidName:      pidName,
 		Heap:         fmt.Sprintf("%.2f", heap),
 		Format:       humanFormat,
 		AvailableRAM: getTotalRAM(),
@@ -179,7 +177,7 @@ func CheckHumanFormat(format string) {
 //ValidatePid Checks if there's an existing JAVA process running with the provided pid.
 func ValidatePid(pidInput string) bool {
 	res := helper.ExeCmd("ps auwx | grep java")
-	if strings.Contains(res, pidInput) == false {
+	if !strings.Contains(res, pidInput) {
 		fmt.Println("No java process found with pid:", pidInput, "Exiting..")
 		os.Exit(1)
 	}
@@ -189,8 +187,8 @@ func ValidatePid(pidInput string) bool {
 //ValidateAll Checks if any JAVA process is running, if not it terminates the execution
 func ValidateAll() {
 	res := helper.ExeCmd("ps auwx | grep java | sed '$d'")
-	if strings.Contains(res, "java") == false {
-		fmt.Println("No java process found .Exiting..")
+	if !strings.Contains(res, "java") {
+		fmt.Println("No JAVA processes found running. Exiting..")
 		os.Exit(1)
 	}
 	allPids = true
