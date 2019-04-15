@@ -63,5 +63,3 @@ Example:
 Jotun is a free program under the MIT license and will remain that way forever. Please feel free to report any issues or development requests through github's ticketing system. Feel free to Fork and enjoy yourself as well.
 
 Hope you'll find it useful
-
-[Buy me a cup of coffee](https://paypal.me/teogia)
