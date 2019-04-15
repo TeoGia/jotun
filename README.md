@@ -5,7 +5,11 @@ CirceCI latest build status: [![CircleCI](https://circleci.com/gh/TeoGia/jotun.s
 
 
 ## Introduction
+<<<<<<< HEAD
 During my short career as a DevOps engineer, I came across a JVM heap monitoring task and soon found out that there was no eay way of getting the heap usage of a running JAVA process without wrapping bash calls to jstat and using bc in order to just get a plain string output. No easy way to integrate into other DevOps scripts using a starndardized Data output format. Well, Jotun is made up to do just that. Get real time info on the heap usage of any JAVA process plus some overall RAM usage stats and then output it neatly in JSON format for easy integration to other custom tools.
+=======
+During my short career as a DevOps engineer, I came across a JVM heap monitoring task and soon found out that there was no easy way of getting the heap usage of a running JAVA process without wrapping bash calls to jstat and using bc in order to just get a plain string output. No easy way to integrate into other DevOps scripts using a starndarized Data output format. Well, Jotun is made up to do just that. Get real time info on the heap usage of any JAVA process plus some overall RAM usage stats and then output it neatly in JSON format for easy integration to other custom tools.
+>>>>>>> 1862f175bdaad916f146425f28b1581bff01c654
 
 ## Installation
 //TODO 
@@ -63,5 +67,3 @@ Example:
 Jotun is a free program under the MIT license and will remain that way forever. Please feel free to report any issues or development requests through github's ticketing system. Feel free to Fork and enjoy yourself as well.
 
 Hope you'll find it useful
-
-[Buy me a cup of coffee](https://paypal.me/teogia)
