@@ -5,17 +5,17 @@ CirceCI latest build status: [![CircleCI](https://circleci.com/gh/TeoGia/jotun.s
 
 
 ## Introduction
-During my short career as a DevOps engineer, I came across a JVM heap monitoring task and soon found out that there was no eay way of getting the heap usage of a running JAVA process without wrapping bash calls to jstat and using bc in order to just get a plain string output. No easy way to integrate into other DevOps scripts using a starndarized Data output format. Well, Jotun is made up to do just that. Get real time info on the heap usage of any JAVA process plus some overall RAM usage stats and the output it neatly in JSON format for easy integration to other custom tools.
+During my short career as a DevOps engineer, I came across a JVM heap monitoring task and soon found out that there was no eay way of getting the heap usage of a running JAVA process without wrapping bash calls to jstat and using bc in order to just get a plain string output. No easy way to integrate into other DevOps scripts using a starndardized Data output format. Well, Jotun is made up to do just that. Get real time info on the heap usage of any JAVA process plus some overall RAM usage stats and then output it neatly in JSON format for easy integration to other custom tools.
 
 ## Installation
 //TODO 
-For the time being juton is only available for UNIX operating systems (Linux & MacOS)
+For the time being jotun is only available for UNIX operating systems (Linux & MacOS)
 //todo add installation guide
 
 ## Usage
 >Monitor a single PID
 
-To monitor the heap usage of a single JAVA use:
+To monitor the heap usage of a single JAVA process use:
 
 `./jotun -p PID_of_the_process_you_wish_to_monitor`
 
@@ -24,7 +24,7 @@ The output will be something like that:
 `{"Pid":"4207","PidName":"javaApp.jar","Heap":"27846.90","Format":"kB","AvailableRAM":"16316300.00","FreeRAM":"12117944.00"}`
 
 ### Important!!
-Keep in mind that the output's default unit if measurement is kB. (for fields: Heap, AvailableRAM and FreeRAM).
+Keep in mind that the output's default unit of measurement is kB. (for fields: Heap, AvailableRAM and FreeRAM).
 If you wish to display the output in MB, Bytes or GB, you can use the -h flag like this:
 
 `./jotun -p PID_of_the_process_you_wish_to_monitor -h kB`
