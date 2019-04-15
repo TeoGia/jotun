@@ -73,7 +73,7 @@ func Start() {
 
 //gatheJavaProcess gathers all running java processes into pid list
 func gatherJavaProcess() {
-	res := helper.ExeCmd("ps auwx | egrep java")
+	res := helper.ExeCmd("ps auwx | grep java")
 	if !strings.Contains(res, "java") {
 		fmt.Println("No JAVA processes found running. Exiting..")
 		os.Exit(1)
@@ -186,8 +186,15 @@ func ValidatePid(pidInput string) bool {
 
 //ValidateAll Checks if any JAVA process is running, if not it terminates the execution
 func ValidateAll() {
-	res := helper.ExeCmd("ps auwx | grep java | sed '$d'")
-	if !strings.Contains(res, "java") {
+	res := helper.ExeCmd("ps auwx | grep java")
+	raw := strings.Split(res, "\n")
+	allGrep := 0
+	for _, entry := range raw {
+		if strings.Contains(entry, "grep") {
+			allGrep++
+		}
+	}
+	if allGrep == len(raw)-1 {
 		fmt.Println("No JAVA processes found running. Exiting..")
 		os.Exit(1)
 	}
