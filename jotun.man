@@ -1,0 +1,29 @@
+.TH jotun 1 "16 April 2019" "version 1.0.0-alpha"
+.SH NAME
+Jotun - a simple program to monitor JVM heap size of JAVA processes. DevOps oriented.
+It can monitor any JAVA pid or a list of them and output the info in standard JSON format for easier integration with other tools or scripts.
+.PP
+For bug reports or questions dont hesitate to contact me at 
+.B teogia89@gmail.com
+.SH SYNOPSIS
+.B jotun [--all] [-p $pid] [--pid-list $pidList] [-v] [-h $format] [--help]
+.SH OPTIONS
+.B --all
+Displays JVM Heap usage and Memory info for all running JAVA processes.
+.PP
+.B --help
+Displays help regarding jotun's usage.
+.PP
+.B -p $pid
+Given a specific pid number as an argument it outputs JVM heap and RAM usage info in JSON format.
+.PP
+.B --pid-list
+Given a comma seperated pid list like 1234,5678,91011 jotun ouputs JVM heap and RAM usage info in JSON format.
+.PP
+.B --all
+Jotun automatically scans and displays usage info for all running JAVA processes.
+.PP
+.B -v
+Displays Jotun's version
+.SH AUTHOR
+.B Theodore Giannopoulos - Software Engineer teogia89@gmail.com
