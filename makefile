@@ -8,12 +8,12 @@ BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
 
-all: test build run
+all: runtest build run
 .PHONY: build
 build:
 	$(info Building for: $(OS))
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/... 
-test: 
+runtest: 
 	$(GOTEST) -v ./...
 clean: 
 	$(GOCLEAN)
