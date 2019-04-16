@@ -24,7 +24,7 @@ jobs: # basic units of work in a run
             - v1-pkg-cache
       - run:
           name: Install custom packages
-          command: go get github.com/teogia/jotun/helper
+          command: go get github.com/TeoGia/jotun/helper
       - run:
           name: unit tests
           command: make runtest
