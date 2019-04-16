@@ -8,6 +8,7 @@ BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
 
+
 all: runtest build run
 .PHONY: build
 build:
@@ -22,3 +23,8 @@ clean:
 run:
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
 	./bin/$(BINARY_NAME)
+runprd:
+	$(info Building for: $(OS))
+	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
+	tar cvzf  jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz ./LICENSE ./jotun.man ./bin/jotun
+	
