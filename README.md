@@ -8,12 +8,21 @@ CirceCI latest build status: [![CircleCI](https://circleci.com/gh/TeoGia/jotun.s
 During my short career as a DevOps engineer, I came across a JVM heap monitoring task and soon found out that there was no easy way of getting the heap usage of a running JAVA process without wrapping bash calls to jstat and using bc in order to just get a plain string output. No easy way to integrate into other DevOps scripts using a starndarized Data output format. Well, Jotun is made up to do just that. Get real time info on the heap usage of any JAVA process plus some overall RAM usage stats and then output it neatly in JSON format for easy integration to other custom tools.
 
 ## Installation
-//TODO 
+
 For the time being jotun is only available for UNIX operating systems (Linux & MacOS)
-//todo add installation guide
+
+First download the latest version of jotun from [here](https://github.com/TeoGia/jotun/releases)
+
+then for UNIX operating system you can run jotun in the directory of your choice by calling the absolute path to jotun executable or you can copy the executable to /usr/local/bin, so it can be available for all users and from every directory, use the following command to do so (qwill probably need sudo privileges):
+
+```
+sudo cp /{whatever_download_dir}/jotun /usr/local/bin/jotun
+```
 
 ## Usage
 >Monitor a single PID
+
+to use it you can either run it like `jotun` if you installed it in /usr/local/bin or by `./{PATH_TO_Jotun}`
 
 To monitor the heap usage of a single JAVA process use:
 
