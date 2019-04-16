@@ -10,7 +10,7 @@ jobs: # basic units of work in a run
           POSTGRES_USER: circleci-demo-go
           POSTGRES_DB: circle_test
     # directory where steps are run. Path must conform to the Go Workspace requirements
-    working_directory: /go/src/github.com/TeoGia/jotun
+    working_directory: /go/src/github.com/teogia/jotun
 
     environment: # environment variables for the build itself
       TEST_RESULTS: /tmp/test-results # path to where test results will be saved
