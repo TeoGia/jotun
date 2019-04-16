@@ -33,6 +33,8 @@ var (
 	humanFormat = "kB"
 	singlePid   bool
 	allPids     = false
+	freeRam     string
+	totalRam    string
 )
 
 //GetVersion returns current version
@@ -64,6 +66,8 @@ func Start() {
 		}
 		PrintOptions(false)
 	}
+	totalRam = getTotalRAM()
+	freeRam = getFreeRAM()
 	if singlePid {
 		fmt.Println(string(helper.PrintJSON(getSinglePidHeap(pid))))
 	} else {
@@ -157,8 +161,8 @@ func getSinglePidHeap(pid string) pidOut {
 		PidName:      pidName,
 		Heap:         fmt.Sprintf("%.2f", heap),
 		Format:       humanFormat,
-		AvailableRAM: getTotalRAM(),
-		FreeRAM:      getFreeRAM(),
+		AvailableRAM: totalRam,
+		FreeRAM:      freeRam,
 	}
 
 	return output
