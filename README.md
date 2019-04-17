@@ -19,6 +19,18 @@ then for UNIX operating system you can run jotun in the directory of your choice
 sudo cp /{whatever_download_dir}/jotun /usr/local/bin/jotun
 ```
 
+To install the man page as well download the tar.gz file from [here](https://github.com/TeoGia/jotun/releases) and untar it like this:
+
+```
+tar -xvzf jotun-1.0.0-alpha.tar.gz -C ./whatever/
+```
+
+then `cd` into the whatever folder and run the installer (needs sudo) like this:
+
+```
+sudo ./installer.sh
+```
+
 ## Usage
 >Monitor a single PID
 

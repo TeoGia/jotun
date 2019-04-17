@@ -26,5 +26,5 @@ run:
 runprd:
 	$(info Building for: $(OS))
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
-	tar cvzf ./release/jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz ./LICENSE ./jotun.man ./bin/jotun
+	tar cvzf ./release/jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz ./LICENSE ./jotun.1 ./bin/jotun ./installer.sh
 	
