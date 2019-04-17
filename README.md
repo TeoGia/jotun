@@ -55,7 +55,8 @@ To monitor a PID list of Java processes, you can use the --pid-list flag like th
 
 ```
 ./jotun --pidlist 123,456,789
-``` Note that the separator is ,
+``` 
+Note that the separator is ,
 
 The JSON output would be like this:
 
