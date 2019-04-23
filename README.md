@@ -37,8 +37,9 @@ The output will be something like that:
 ```
 
 ### Important!!
-Keep in mind that the output's default unit of measurement is kB. (for fields: Heap, AvailableRAM and FreeRAM).
-If you wish to display the output in MB, Bytes or GB, you can use the -h flag like this:
+1) In order for jotun to work, it needs to be ran as the user of the pid you wish to get data for.
+2) Keep in mind that the output's default unit of measurement is kB. (for fields: Heap, AvailableRAM and FreeRAM).
+   If you wish to display the output in MB, Bytes or GB, you can use the -h flag like this:
 
 ```
 ./jotun -p PID_of_the_process_you_wish_to_monitor -h kB
