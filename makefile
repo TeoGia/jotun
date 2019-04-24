@@ -32,9 +32,9 @@ makedeb:
 	$(info Creating DEBIAN package)
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
 	if [ ! -d "./deb-release/jotun-${VERSION}" ]; then echo Creating deb dir..; mkdir ./deb-release/jotun-${VERSION}; mkdir ./deb-release/jotun-${VERSION}/usr/; mkdir ./deb-release/jotun-${VERSION}/usr/local; mkdir ./deb-release/jotun-${VERSION}/usr/share; mkdir ./deb-release/jotun-${VERSION}/usr/share/man; mkdir ./deb-release/jotun-${VERSION}/usr/share/man/man1; mkdir ./deb-release/jotun-${VERSION}/usr/local/bin; mkdir ./deb-release/jotun-${VERSION}/DEBIAN; fi
-	#TODO update version inside control
 	cp control ./deb-release/jotun-${VERSION}/DEBIAN/
+	sed -i -e 's/versionhere/${VERSION}/g' ./deb-release/jotun-${VERSION}/DEBIAN/control
 	cp ./bin/jotun ./deb-release/jotun-$(VERSION)/usr/local/bin/
 	gzip -c jotun.1 > jotun.1.gz
 	mv jotun.1.gz ./deb-release/jotun-$(VERSION)/usr/share/man/man1/
-
+	echo Deb package created!!
