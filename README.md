@@ -31,6 +31,11 @@ then `cd` into the whatever folder and run the installer (needs sudo) like this:
 sudo ./installer.sh
 ```
 
+or you can just download the deb package and install it like this:
+```
+sudo dpkg -i jotun-1.0.0-beta.deb
+```
+
 ## Usage
 >Monitor a single PID
 

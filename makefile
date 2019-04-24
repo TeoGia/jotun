@@ -7,7 +7,7 @@ GOGET=$(GOCMD) get
 BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
-VERSION=1.0.0-alpha
+VERSION=1.0.0-beta
 
 
 all: runtest build run

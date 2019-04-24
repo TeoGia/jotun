@@ -24,7 +24,7 @@ type pidOut struct {
 
 const (
 	//VERSION the application's current version
-	VERSION = "1.0.0-alpha"
+	VERSION = "1.0.0-beta"
 )
 
 var (
