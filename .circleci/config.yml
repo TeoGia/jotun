@@ -31,6 +31,8 @@ jobs: # basic units of work in a run
       - run:
           name: Build step (runprd)
           command: make runprd
+      - run:
+          name: Build Debian package
           command: make makedeb
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
