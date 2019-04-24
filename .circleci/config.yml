@@ -30,7 +30,7 @@ jobs: # basic units of work in a run
           name: unit tests
           command: make runtest
       - run:
-          name: Build step 
+          name: Build step (runprd)
           command: make runprd
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
@@ -47,3 +47,6 @@ jobs: # basic units of work in a run
             VERSION=$(./bin/jotun -v)
             echo -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION}
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./bin/jotun ./release/
+
+
+            # build deb package https://www.leaseweb.com/labs/2013/06/creating-custom-debian-packages/
