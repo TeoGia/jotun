@@ -7,7 +7,7 @@ GOGET=$(GOCMD) get
 BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
-NAME="./bin/jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz"
+NAME="./bin/jotun-1.0.0-alpha.tar.gz"
 
 
 all: runtest build run
