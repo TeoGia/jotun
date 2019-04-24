@@ -7,6 +7,7 @@ GOGET=$(GOCMD) get
 BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
+NAME="./bin/jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz"
 
 
 all: runtest build run
@@ -26,5 +27,5 @@ run:
 runprd:
 	$(info Building for: $(OS))
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
-	tar cvzf ./bin/jotun-$(shell ./bin/$(BINARY_NAME) -v).tar.gz ./LICENSE ./jotun.1 ./bin/jotun ./installer.sh
+	tar cvzf "$(NAME)" ./LICENSE ./jotun.1 ./bin/jotun ./installer.sh
 	
