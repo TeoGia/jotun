@@ -14,4 +14,4 @@
 #dirs
 /bin/*
 /logs/*
-/release/*
+/deb-release/*

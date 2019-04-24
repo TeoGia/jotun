@@ -1,0 +1,8 @@
+Package: jotun
+Version: 1.0.0-alpha
+Section: base
+Priority: optional
+Architecture: all
+Depends: debconf (>= 0.2.26)
+Maintainer:  <Theodore Giannopoulos <teogia89@gmail.com>
+Description: Devops tool to get JVM heap usage of JAVA processes.

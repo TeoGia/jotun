@@ -7,7 +7,7 @@ GOGET=$(GOCMD) get
 BINARY_NAME=jotun
 BINARY_UNIX=$(BINARY_NAME)_unix
 OS=$(shell uname -s)
-NAME="./bin/jotun-1.0.0-alpha.tar.gz"
+VERSION=1.0.0-alpha
 
 
 all: runtest build run
@@ -27,5 +27,14 @@ run:
 runprd:
 	$(info Building for: $(OS))
 	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
-	tar cvzf "$(NAME)" ./LICENSE ./jotun.1 ./bin/jotun ./installer.sh
-	
+	tar cvzf "./bin/jotun-$(VERSION).tar.gz" ./LICENSE ./jotun.1 ./bin/jotun ./installer.sh
+makedeb:
+	$(info Creating DEBIAN package)
+	$(GOBUILD) -o ./bin/$(BINARY_NAME) -v ./cmd/jotun/...
+	if [ ! -d "./deb-release/jotun-${VERSION}" ]; then echo Creating deb dir..; mkdir ./deb-release/jotun-${VERSION}; mkdir ./deb-release/jotun-${VERSION}/usr/; mkdir ./deb-release/jotun-${VERSION}/usr/local; mkdir ./deb-release/jotun-${VERSION}/usr/share; mkdir ./deb-release/jotun-${VERSION}/usr/share/man; mkdir ./deb-release/jotun-${VERSION}/usr/share/man/man1; mkdir ./deb-release/jotun-${VERSION}/usr/local/bin; mkdir ./deb-release/jotun-${VERSION}/DEBIAN; fi
+	#TODO update version inside control
+	cp control ./deb-release/jotun-${VERSION}/DEBIAN/
+	cp ./bin/jotun ./deb-release/jotun-$(VERSION)/usr/local/bin/
+	gzip -c jotun.1 > jotun.1.gz
+	mv jotun.1.gz ./deb-release/jotun-$(VERSION)/usr/share/man/man1/
+
