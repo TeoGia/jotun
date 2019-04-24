@@ -37,4 +37,6 @@ makedeb:
 	cp ./bin/jotun ./deb-release/jotun-$(VERSION)/usr/local/bin/
 	gzip -c jotun.1 > jotun.1.gz
 	mv jotun.1.gz ./deb-release/jotun-$(VERSION)/usr/share/man/man1/
+	dpkg-deb --build ./deb-release/jotun-${VERSION}/
+	cp ./deb-release/*.deb ./bin/
 	echo Deb package created!!
