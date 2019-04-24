@@ -31,6 +31,7 @@ jobs: # basic units of work in a run
       - run:
           name: Build step (runprd)
           command: make runprd
+          command: make makedeb
       - save_cache: # Store cache in the /go/pkg directory
           key: v1-pkg-cache
           paths:
@@ -45,6 +46,4 @@ jobs: # basic units of work in a run
             GITHUB_TOKEN=ac590a7b9659dfd9858f6a89e3786a6c350e0edc
             VERSION=$(./bin/jotun -v)
             echo -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION}
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./bin/
-
-            # build deb package https://www.leaseweb.com/labs/2013/06/creating-custom-debian-packages/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./bin/ 
